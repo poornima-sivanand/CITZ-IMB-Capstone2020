@@ -1,0 +1,93 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<project>
+    <actions/>
+    <description/>
+    <keepDependencies>false</keepDependencies>
+    <properties>
+    <hudson.plugins.jira.JiraProjectProperty plugin="jira@3.0.8"/>
+    <com.sonyericsson.rebuild.RebuildSettings plugin="rebuild@1.31">
+    <autoRebuild>false</autoRebuild>
+    <rebuildDisabled>false</rebuildDisabled>
+    </com.sonyericsson.rebuild.RebuildSettings>
+    <hudson.model.ParametersDefinitionProperty>
+    <parameterDefinitions>
+    <hudson.model.StringParameterDefinition>
+    <name>x_event_key</name>
+    <description/>
+    <defaultValue/>
+    <trim>false</trim>
+    </hudson.model.StringParameterDefinition>
+    <hudson.model.StringParameterDefinition>
+    <name>payload</name>
+    <description/>
+    <defaultValue/>
+    <trim>false</trim>
+    </hudson.model.StringParameterDefinition>
+    <hudson.model.StringParameterDefinition>
+    <name>bitbucket_url</name>
+    <description/>
+    <defaultValue>https://bwa.nrs.gov.bc.ca/int/stash</defaultValue>
+    <trim>false</trim>
+    </hudson.model.StringParameterDefinition>
+    </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+    </properties>
+    <scm class="hudson.scm.NullSCM"/>
+    <canRoam>true</canRoam>
+    <disabled>false</disabled>
+    <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+    <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+    <triggers>
+    <org.jenkinsci.plugins.gwt.GenericTrigger plugin="generic-webhook-trigger@1.54">
+    <spec/>
+    <genericVariables>
+    <org.jenkinsci.plugins.gwt.GenericVariable>
+    <expressionType>JSONPath</expressionType>
+    <key>payload</key>
+    <value>pullRequest</value>
+    <regexpFilter/>
+    <defaultValue/>
+    </org.jenkinsci.plugins.gwt.GenericVariable>
+    </genericVariables>
+    <regexpFilterText/>
+    <regexpFilterExpression/>
+    <genericRequestVariables>
+    <org.jenkinsci.plugins.gwt.GenericRequestVariable>
+    <key>payload</key>
+    <regexpFilter/>
+    </org.jenkinsci.plugins.gwt.GenericRequestVariable>
+    </genericRequestVariables>
+    <genericHeaderVariables>
+    <org.jenkinsci.plugins.gwt.GenericHeaderVariable>
+    <key>X-Event-Key</key>
+    <regexpFilter/>
+    </org.jenkinsci.plugins.gwt.GenericHeaderVariable>
+    </genericHeaderVariables>
+    <printPostContent>false</printPostContent>
+    <printContributedVariables>false</printContributedVariables>
+    <causeString>Generic Cause</causeString>
+    <token>#{TOKEN}</token>
+    <silentResponse>false</silentResponse>
+    </org.jenkinsci.plugins.gwt.GenericTrigger>
+    </triggers>
+    <concurrentBuild>true</concurrentBuild>
+    <builders>
+    <hudson.plugins.groovy.SystemGroovy plugin="groovy@2.2">
+    <source class="hudson.plugins.groovy.StringSystemScriptSource">
+    <script plugin="script-security@1.61">
+    <script>
+        evaluate(new File(System.getenv()[&apos;JENKINS_HOME&apos;], &apos;scripts.groovy.d/on-gh-event.groovy&apos;))
+    </script>
+    <sandbox>false</sandbox>
+    </script>
+    </source>
+    </hudson.plugins.groovy.SystemGroovy>
+    </builders>
+    <publishers/>
+    <buildWrappers>
+    <hudson.plugins.ansicolor.AnsiColorBuildWrapper plugin="ansicolor@0.6.2">
+    <colorMapName>xterm</colorMapName>
+    </hudson.plugins.ansicolor.AnsiColorBuildWrapper>
+    </buildWrappers>
+    </project>
+    
