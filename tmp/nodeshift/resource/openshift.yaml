@@ -1,0 +1,103 @@
+apiVersion: v1
+kind: List
+items:
+  - apiVersion: apps.openshift.io/v1
+    kind: DeploymentConfig
+    metadata:
+      name: react-web-app
+      namespace: xordpe-test
+      labels:
+        project: react-web-app
+        version: 0.1.0
+        provider: nodeshift
+        app: react-web-app
+        app.kubernetes.io/name: nodejs
+        app.kubernetes.io/component: react-web-app
+        app.kubernetes.io/instance: react-web-app
+        app.openshift.io/runtime: nodejs
+      annotations:
+        nodeshift/git-branch: master
+        nodeshift/git-commit: 32c06ac15732d81581db0a5eabdbb8ca023ae2da
+    spec:
+      replicas: 1
+      revisionHistoryLimit: 2
+      selector:
+        app: react-web-app
+        project: react-web-app
+        provider: nodeshift
+      triggers:
+        - type: ConfigChange
+        - type: ImageChange
+          imageChangeParams:
+            automatic: true
+            containerNames:
+              - react-web-app
+            from:
+              kind: ImageStreamTag
+              namespace: xordpe-test
+              name: 'react-web-app:latest'
+      template:
+        metadata:
+          labels:
+            project: react-web-app
+            version: 0.1.0
+            provider: nodeshift
+            app: react-web-app
+          annotations:
+            nodeshift/git-branch: master
+            nodeshift/git-commit: 32c06ac15732d81581db0a5eabdbb8ca023ae2da
+        spec:
+          containers:
+            - image: react-web-app
+              name: react-web-app
+              securityContext:
+                privileged: false
+              ports:
+                - containerPort: 8080
+                  name: http
+                  protocol: TCP
+              env: []
+  - apiVersion: v1
+    kind: Service
+    spec:
+      selector:
+        project: react-web-app
+        provider: nodeshift
+      ports:
+        - protocol: TCP
+          port: 8080
+          targetPort: 8080
+          name: http
+      type: ClusterIP
+    metadata:
+      name: react-web-app
+      namespace: xordpe-test
+      labels:
+        project: react-web-app
+        version: 0.1.0
+        provider: nodeshift
+        app.kubernetes.io/name: nodejs
+        app.kubernetes.io/component: react-web-app
+        app.kubernetes.io/instance: react-web-app
+        app.openshift.io/runtime: nodejs
+      annotations:
+        nodeshift/git-branch: master
+        nodeshift/git-commit: 32c06ac15732d81581db0a5eabdbb8ca023ae2da
+  - apiVersion: route.openshift.io/v1
+    kind: Route
+    spec:
+      to:
+        kind: Service
+        name: react-web-app
+      port:
+        targetPort: 8080
+    metadata:
+      name: react-web-app
+      labels:
+        project: react-web-app
+        version: 0.1.0
+        provider: nodeshift
+        app.kubernetes.io/name: nodejs
+        app.kubernetes.io/component: react-web-app
+        app.kubernetes.io/instance: react-web-app
+        app.openshift.io/runtime: nodejs
