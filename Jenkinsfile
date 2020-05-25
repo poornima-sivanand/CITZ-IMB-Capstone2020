@@ -62,7 +62,7 @@ pipeline {
                 script {
                 // Use Pipeline-cli node project to deploy the wiof-build image to Test Stage 
                 echo "Deploying to Test ..."
-                sh "cd .pipeline && ${WORKSPACE}/npmw ci && DEBUG='info:*' ${WORKSPACE}/npmw run deploy -- --pr=${CHANGE_ID} --env=test --git.branch.name=${GIT_BRANCH} --git.branch.remote=${GIT_BRANCH} --git.branch.merge=${CHANGE_TARGET} --git.url=${GIT_URL}" 
+                sh "cd .pipeline && ${WORKSPACE}/npmw ci && DEBUG='info:*' ${WORKSPACE}/npmw run deploy -- --pr=${CHANGE_ID} --env=test --git.branch.name=${GIT_BRANCH} --git.branch.remote=${GIT_BRANCH} --git.branch.merge=${CHANGE_TARGET} --git.url=${GIT_URL} --git.branch.name=${GIT_BRANCH} --git.branch.remote=${GIT_BRANCH} --git.branch.merge=${CHANGE_TARGET} --git.url=${GIT_URL}" 
             }
             }
         }

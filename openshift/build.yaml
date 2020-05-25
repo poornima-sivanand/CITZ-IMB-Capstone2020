@@ -9,20 +9,20 @@ objects:
       openshift.io/generated-by: OpenShiftNewBuild
     generation: 2
     labels:
-      build: ${APP_NAME}
-    name: ${SOURCE_IMAGE_NAME}
+      build: citz-imb-capstone2020
+    name: static-web-app-running-on-nginx
   spec:
     lookupPolicy:
       local: false
     tags:
     - annotations:
-        openshift.io/imported-from: <>
+        openshift.io/imported-from: docker-registry.default.svc:5000/xordpe-dev/static-web-app-running-on-nginx
       from:
         kind: DockerImage
-        name: <>
+        name: docker-registry.default.svc:5000/xordpe-dev/static-web-app-running-on-nginx
       generation: 2
       importPolicy: {}
-      name: ${SOURCE_IMAGE_TAG}
+      name: '1.16'
       referencePolicy:
         type: Local
   status: {}
@@ -33,7 +33,7 @@ objects:
     creationTimestamp: null
     labels:
       shared: "true"
-    name: ${APP_NAME}
+    name: citz-imb-capstone2020
   spec:
     lookupPolicy:
       local: false
@@ -43,7 +43,7 @@ objects:
     annotations: {}
     creationTimestamp: null
     labels: {}
-    name: ${APP_NAME}-${SUFFIX}
+    name: citz-imb-capstone2020-build-1
   spec:
     completionDeadlineSeconds: 1440
     failedBuildsHistoryLimit: 4
@@ -51,7 +51,7 @@ objects:
     output:
       to:
         kind: ImageStreamTag
-        name: ${APP_NAME}:${VERSION}
+        name: citz-imb-capstone2020:1.16
     postCommit: {}
     resources:
       limits:
@@ -73,7 +73,7 @@ objects:
       sourceStrategy:
         from:
           kind: ImageStreamTag
-          name: ${SOURCE_IMAGE_NAME}:${SORUCE_IMAGE_TAG}
+          name: citz-imb-capstone2020:1.16
         env:
         incremental: true
       type: Source
@@ -82,29 +82,29 @@ objects:
     - imageChange:
         from:
           kind: ImageStreamTag
-          name: ${SOURCE_IMAGE_NAME}:${SOURCE_IMAGE_TAG}
+          name: citz-imb-capstone2020:1.16
       type: ImageChange
     - type: ConfigChange
   
-parameters:
-- description: Name used for all created objects
-  displayName: Name
-  name: APP_NAME
-  required: true
-  value: 
-- description: A suffix appended to all objects
-  name: SUFFIX
-  value: -build
-- name: VERSION
-  decription: The output tag name created by the build config
-  required: true
-  value: build-v1.0-2
-- name: SOURCE_GIT_URL
-  required: true
-  value: 
-- name: SOURCE_GIT_REF
-  required: false
-- name: SOURCE_IMAGE_NAME
-  value: ""
-- name: SOURCE_IMAGE_TAG
-  value: ""
+# parameters:
+# - description: Name used for all created objects
+#   displayName: Name
+#   name: APP_NAME
+#   required: true
+#   value: 
+# - description: A suffix appended to all objects
+#   name: SUFFIX
+#   value: -build
+# - name: VERSION
+#   decription: The output tag name created by the build config
+#   required: true
+#   value: build-v1.0-2
+# - name: SOURCE_GIT_URL
+#   required: true
+#   value: 
+# - name: SOURCE_GIT_REF
+#   required: false
+# - name: SOURCE_IMAGE_NAME
+#   value: ""
+# - name: SOURCE_IMAGE_TAG
+#   value: ""
