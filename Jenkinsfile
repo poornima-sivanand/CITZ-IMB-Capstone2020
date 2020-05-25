@@ -16,7 +16,7 @@ pipeline {
                 script {    
                     // Use Pipeline-cli node project to build the open shift images, wiof-app-build ( open jdk image to build code with maven ) and wiof-build ( jboss web server image to host the web application ) 
                     echo "Building Openshift Images..." 
-                    sh "cd .pipeline && ${WORKSPACE}/npmw ci && DEBUG='info:*' ${WORKSPACE}/npmw run build -- --pr=${CHANGE_ID}"
+                    sh "cd .pipeline && ${WORKSPACE}/npmw ci && DEBUG='info:*' ${WORKSPACE}/npmw run build -- --pr=${CHANGE_ID} --git.branch.name=${GIT_BRANCH} --git.branch.remote=${GIT_BRANCH} --git.branch.merge=${CHANGE_TARGET} --git.url=${GIT_URL}"
                    
                 }
             }
@@ -28,7 +28,7 @@ pipeline {
                 script {
                 // Use Pipeline-cli node project to deploy the wiof-build image to Dev Stage 
                 echo "Deploying to DEV ..."
-                sh "cd .pipeline && ${WORKSPACE}/npmw ci && DEBUG='info:*' ${WORKSPACE}/npmw run deploy -- --pr=${CHANGE_ID} --env=dev" 
+                sh "cd .pipeline && ${WORKSPACE}/npmw ci && DEBUG='info:*' ${WORKSPACE}/npmw run deploy -- --pr=${CHANGE_ID} --env=dev --git.branch.name=${GIT_BRANCH} --git.branch.remote=${GIT_BRANCH} --git.branch.merge=${CHANGE_TARGET} --git.url=${GIT_URL}" 
              }
            }
         }
@@ -62,7 +62,7 @@ pipeline {
                 script {
                 // Use Pipeline-cli node project to deploy the wiof-build image to Test Stage 
                 echo "Deploying to Test ..."
-                sh "cd .pipeline && ${WORKSPACE}/npmw ci && DEBUG='info:*' ${WORKSPACE}/npmw run deploy -- --pr=${CHANGE_ID} --env=test" 
+                sh "cd .pipeline && ${WORKSPACE}/npmw ci && DEBUG='info:*' ${WORKSPACE}/npmw run deploy -- --pr=${CHANGE_ID} --env=test --git.branch.name=${GIT_BRANCH} --git.branch.remote=${GIT_BRANCH} --git.branch.merge=${CHANGE_TARGET} --git.url=${GIT_URL}" 
             }
             }
         }
@@ -98,7 +98,7 @@ pipeline {
                 script {
                 // Use Pipeline-cli node project to deploy the wiof-build image to Prod Stage
                 echo "Deploying to Prod ..."
-                sh "cd .pipeline && ${WORKSPACE}/npmw ci && DEBUG='info:*' ${WORKSPACE}/npmw run deploy -- --pr=${CHANGE_ID} --env=prod"
+                sh "cd .pipeline && ${WORKSPACE}/npmw ci && DEBUG='info:*' ${WORKSPACE}/npmw run deploy -- --pr=${CHANGE_ID} --env=prod --git.branch.name=${GIT_BRANCH} --git.branch.remote=${GIT_BRANCH} --git.branch.merge=${CHANGE_TARGET} --git.url=${GIT_URL}"
                  }
               }
            }
@@ -109,8 +109,8 @@ pipeline {
             steps {
                 // Use Pipeline-cli node project to clean openshift objects
                 script {
-                     sh "cd .pipeline && ${WORKSPACE}/npmw ci && DEBUG='info:*' ${WORKSPACE}/npmw run clean -- --pr=${CHANGE_ID} --env=build"
-                     sh "cd .pipeline && ${WORKSPACE}/npmw ci && DEBUG='info:*' ${WORKSPACE}/npmw run clean -- --pr=${CHANGE_ID} --env=dev"
+                     sh "cd .pipeline && ${WORKSPACE}/npmw ci && DEBUG='info:*' ${WORKSPACE}/npmw run clean -- --pr=${CHANGE_ID} --env=build --git.branch.name=${GIT_BRANCH} --git.branch.remote=${GIT_BRANCH} --git.branch.merge=${CHANGE_TARGET} --git.url=${GIT_URL}"
+                     sh "cd .pipeline && ${WORKSPACE}/npmw ci && DEBUG='info:*' ${WORKSPACE}/npmw run clean -- --pr=${CHANGE_ID} --env=dev --git.branch.name=${GIT_BRANCH} --git.branch.remote=${GIT_BRANCH} --git.branch.merge=${CHANGE_TARGET} --git.url=${GIT_URL}"
   
                }
             }
