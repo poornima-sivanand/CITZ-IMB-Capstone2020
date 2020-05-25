@@ -1,0 +1,110 @@
+---
+apiVersion: template.openshift.io/v1
+kind: Template
+objects:
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    annotations:
+      openshift.io/generated-by: OpenShiftNewBuild
+    generation: 2
+    labels:
+      build: ${APP_NAME}
+    name: ${SOURCE_IMAGE_NAME}
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - annotations:
+        openshift.io/imported-from: <>
+      from:
+        kind: DockerImage
+        name: <>
+      generation: 2
+      importPolicy: {}
+      name: ${SOURCE_IMAGE_TAG}
+      referencePolicy:
+        type: Local
+  status: {}
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations: null
+    creationTimestamp: null
+    labels:
+      shared: "true"
+    name: ${APP_NAME}
+  spec:
+    lookupPolicy:
+      local: false
+- apiVersion: v1
+  kind: BuildConfig
+  metadata:
+    annotations: {}
+    creationTimestamp: null
+    labels: {}
+    name: ${APP_NAME}-${SUFFIX}
+  spec:
+    completionDeadlineSeconds: 1440
+    failedBuildsHistoryLimit: 4
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: ${APP_NAME}:${VERSION}
+    postCommit: {}
+    resources:
+      limits:
+        cpu: 500m
+        memory: 2Gi
+      requests:
+        cpu: 250m
+        memory: 1Gi
+    runPolicy: SerialLatestOnly
+    source:
+      git:
+        ref: ${SOURCE_GIT_REF}
+        uri: ${SOURCE_GIT_URL}
+      sourceSecret:
+        name: github-account
+      type: Git
+      contextDir: "*"
+    strategy:
+      sourceStrategy:
+        from:
+          kind: ImageStreamTag
+          name: ${SOURCE_IMAGE_NAME}:${SORUCE_IMAGE_TAG}
+        env:
+        incremental: true
+      type: Source
+    successfulBuildsHistoryLimit: 3
+    triggers:
+    - imageChange:
+        from:
+          kind: ImageStreamTag
+          name: ${SOURCE_IMAGE_NAME}:${SOURCE_IMAGE_TAG}
+      type: ImageChange
+    - type: ConfigChange
+  
+parameters:
+- description: Name used for all created objects
+  displayName: Name
+  name: APP_NAME
+  required: true
+  value: 
+- description: A suffix appended to all objects
+  name: SUFFIX
+  value: -build
+- name: VERSION
+  decription: The output tag name created by the build config
+  required: true
+  value: build-v1.0-2
+- name: SOURCE_GIT_URL
+  required: true
+  value: 
+- name: SOURCE_GIT_REF
+  required: false
+- name: SOURCE_IMAGE_NAME
+  value: ""
+- name: SOURCE_IMAGE_TAG
+  value: ""
