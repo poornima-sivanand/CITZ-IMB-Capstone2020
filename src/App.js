@@ -8,7 +8,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Re-build after apply network security policy. last try
+          Re-build after
         </p>
         <a
           className="App-link"
