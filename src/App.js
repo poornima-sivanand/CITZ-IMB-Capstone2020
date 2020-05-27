@@ -8,7 +8,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Re-build after apply network security policy
+          Re-build after apply network security policy. Adding hook, I feel so bad..
         </p>
         <a
           className="App-link"
