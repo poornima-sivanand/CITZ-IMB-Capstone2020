@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: citz-imb-capstone
+  name: capstone2020
   annotations:
     iconClass: icon-jboss
     tags: nodejs, react, web app
@@ -13,7 +13,7 @@ parameters:
   - name: SOURCE_REPOSITORY_URL
     description: The source URL for the application
     displayName: Source URL
-    value: "https://github.com/Murphy316/OPReactViaGit"
+    value: "https://github.com/Murphy316/CITZ-IMB-Capstone2020"
     required: true
   - name: SOURCE_REPOSITORY_REF
     description: The branch name for the application
@@ -40,17 +40,17 @@ objects:
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: citz-imb-capstone-builder
+    name: capstone2020-builder
   spec: {}
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: static-web-app-running-on-nginx
+    name: capstone2020-image
   spec: {}
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: web-app-s2i-image
+    name: capstone2020-s2i-image
   spec:
     tags:
     - name: latest
@@ -60,7 +60,7 @@ objects:
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: nginx-image-runtime
+    name: capstone2020-nginx-image-runtime
   spec:
     tags:
     - name: latest
@@ -70,12 +70,12 @@ objects:
 - apiVersion: v1
   kind: BuildConfig
   metadata:
-    name: citz-imb-capstone-builder
+    name: capstone2020-builder
   spec:
     output:
       to:
         kind: ImageStreamTag
-        name: citz-imb-capstone-builder:latest
+        name: capstone2020-builder:latest
     postCommit: {}
     resources: {}
     source:
@@ -91,7 +91,7 @@ objects:
             value: ${OUTPUT_DIR}
         from:
           kind: ImageStreamTag
-          name: web-app-s2i-image:latest
+          name: capstone2020-s2i-image:latest
         incremental: true
       type: Source
     triggers:
@@ -106,12 +106,12 @@ objects:
 - apiVersion: v1
   kind: BuildConfig
   metadata:
-    name: static-web-app-running-on-nginx
+    name: capstone2020-image
   spec:
     output:
       to:
         kind: ImageStreamTag
-        name: static-web-app-running-on-nginx:latest
+        name: capstone2020-image:latest
     postCommit: {}
     resources: {}
     source:
@@ -119,7 +119,7 @@ objects:
       images:
         - from:
             kind: ImageStreamTag
-            name: citz-imb-capstone-builder:latest
+            name: capstone2020-builder:latest
           paths:
             - destinationDir: .
               sourcePath: /opt/app-root/output/.
@@ -127,7 +127,7 @@ objects:
       sourceStrategy:
         from:
           kind: ImageStreamTag
-          name: nginx-image-runtime:latest
+          name: capstone2020-nginx-image-runtime:latest
         incremental: true
       type: Source
     triggers:
@@ -141,20 +141,20 @@ objects:
       imageChange:
         from:
           kind: ImageStreamTag
-          name: citz-imb-capstone-builder:latest
+          name: capstone2020-builder:latest
   status:
     lastVersion: 0
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
     labels:
-      app: citz-imb-capstone
-    name: citz-imb-capstone
+      app: capstone2020
+    name: capstone2020
   spec:
     replicas: 1
     revisionHistoryLimit: 2
     selector:
-      app: citz-imb-capstone
+      app: capstone2020
     strategy:
       rollingParams:
         timeoutSeconds: 3600
@@ -162,7 +162,7 @@ objects:
     template:
       metadata:
         labels:
-          app: citz-imb-capstone
+          app: capstone2020
       spec:
         containers:
         - env:
@@ -170,47 +170,47 @@ objects:
             valueFrom:
               fieldRef:
                 fieldPath: metadata.namespace
-          image: static-web-app-running-on-nginx
+          image: capstone2020-image
           imagePullPolicy: IfNotPresent
-          name: static-web-app-running-on-nginx
+          name: capstone2020-image
           ports:
           - containerPort: 8080
             name: http
             protocol: TCP
       metadata:
         labels:
-          app: citz-imb-capstone
+          app: capstone2020
     triggers:
       - type: ConfigChange
       - type: ImageChange
         imageChangeParams:
           automatic: true
           containerNames:
-            - static-web-app-running-on-nginx
+            - capstone2020-image
           from:
             kind: ImageStreamTag
-            name: 'static-web-app-running-on-nginx:latest'
+            name: 'capstone2020-image:latest'
 - apiVersion: v1
   kind: Service
   metadata:
     labels:
-      app: citz-imb-capstone
-    name: citz-imb-capstone
+      app: capstone2020
+    name: capstone2020
   spec:
     ports:
     - name: http
       port: 8080
     selector:
-      app: citz-imb-capstone
+      app: capstone2020
 - apiVersion: v1
   kind: Route
   metadata:
     labels:
-      app: citz-imb-capstone
-    name: citz-imb-capstone
+      app: capstone2020
+    name: capstone2020
   spec:
     port:
       targetPort: 8080
     to:
       kind: Service
-      name: citz-imb-capstone
+      name: capstone2020
