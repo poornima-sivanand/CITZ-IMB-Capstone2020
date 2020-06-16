@@ -6,7 +6,7 @@
  * @Description: In User Settings Edit
  * @FilePath: \OPReactViaGit\src\FetchLatestNews.js
  */ 
-//npm install @material-ui/core
+
  import React, { useEffect, useState } from "react";
  import axios from "axios";
  import { withStyles } from '@material-ui/core/styles';
