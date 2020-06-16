@@ -59,7 +59,7 @@
       >
         Search
       </button>
-      <p>Search category: releases, stories, factsheets, updates or default.</p>
+      <p>Search category: releases, stories, factsheets, updates or default</p>
 
       <ul>
         {data.map(item =>  (
