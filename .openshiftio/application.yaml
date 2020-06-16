@@ -8,7 +8,7 @@ metadata:
     template.openshift.io/provider-display-name: "Red Hat, Inc."
     description: Just building a little react app with a web builder
 labels:
-  application: modern-web-app
+  application: capstone2020
 parameters:
   - name: SOURCE_REPOSITORY_URL
     description: The source URL for the application
@@ -45,12 +45,12 @@ objects:
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: capstone2020-image
+    name: capstone2020-app-running-on-nginx
   spec: {}
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: capstone2020-s2i-image
+    name: capstone2020-app-s2i-image
   spec:
     tags:
     - name: latest
@@ -60,7 +60,7 @@ objects:
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: capstone2020-nginx-image-runtime
+    name: capstone2020-image-runtime
   spec:
     tags:
     - name: latest
@@ -91,7 +91,7 @@ objects:
             value: ${OUTPUT_DIR}
         from:
           kind: ImageStreamTag
-          name: capstone2020-s2i-image:latest
+          name: capstone2020-app-s2i-image:latest
         incremental: true
       type: Source
     triggers:
@@ -106,12 +106,12 @@ objects:
 - apiVersion: v1
   kind: BuildConfig
   metadata:
-    name: capstone2020-image
+    name: capstone2020-app-running-on-nginx
   spec:
     output:
       to:
         kind: ImageStreamTag
-        name: capstone2020-image:latest
+        name: capstone2020-app-running-on-nginx:latest
     postCommit: {}
     resources: {}
     source:
@@ -127,7 +127,7 @@ objects:
       sourceStrategy:
         from:
           kind: ImageStreamTag
-          name: capstone2020-nginx-image-runtime:latest
+          name: capstone2020-image-runtime:latest
         incremental: true
       type: Source
     triggers:
@@ -170,9 +170,9 @@ objects:
             valueFrom:
               fieldRef:
                 fieldPath: metadata.namespace
-          image: capstone2020-image
+          image: capstone2020-app-running-on-nginx
           imagePullPolicy: IfNotPresent
-          name: capstone2020-image
+          name: capstone2020-app-running-on-nginx
           ports:
           - containerPort: 8080
             name: http
@@ -186,10 +186,10 @@ objects:
         imageChangeParams:
           automatic: true
           containerNames:
-            - capstone2020-image
+            - capstone2020-app-running-on-nginx
           from:
             kind: ImageStreamTag
-            name: 'capstone2020-image:latest'
+            name: 'capstone2020-app-running-on-nginx:latest'
 - apiVersion: v1
   kind: Service
   metadata:
