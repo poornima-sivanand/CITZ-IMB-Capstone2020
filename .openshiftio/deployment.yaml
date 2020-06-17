@@ -90,7 +90,7 @@ objects:
       app: capstone2020
     name: capstone2020
   spec:
-    host: capstone2020-xordpe-test.pathfinder.gov.bc.ca
+    host: capstone2020-${NAMESPACE}.pathfinder.gov.bc.ca
     port:
       targetPort: 8080-tcp
     tls:
@@ -102,6 +102,8 @@ objects:
     wildcardPolicy: None
 parameters:
 - name: VERSION
+  required: true
+- name: NAMESPACE
   required: true
 
 
