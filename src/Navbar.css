@@ -1,0 +1,14 @@
+#navbar {
+    height: 50px;
+    background-color: #b3b3b3;
+    border-bottom: 2px solid #444444;
+}
+
+#settings-button {
+    height: 40px;
+}
+
+.panel {
+    margin-bottom: 0px;
+    text-align: center;
+}
