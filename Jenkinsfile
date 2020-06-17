@@ -27,7 +27,7 @@ pipeline {
                 script {
                 // Use Pipeline-cli node project to deploy the wiof-build image to Dev Stage 
                 echo "Deploying to DEV ..."
-                sh oc tag xordpe-tools/capstone2020-builder:1.0 xordpe-dev/capstone2020-builder:1.0
+                sh 'oc tag xordpe-tools/capstone2020-builder:1.0 xordpe-dev/capstone2020-builder:1.0'
              }
            }
         }
@@ -62,7 +62,7 @@ pipeline {
                 script {
                 // Use Pipeline-cli node project to deploy the wiof-build image to Test Stage 
                 echo "Deploying to Test ..."
-                sh oc tag xordpe-tools/capstone2020-builder:1.0 xordpe-test/capstone2020-builder:1.0
+                sh 'oc tag xordpe-tools/capstone2020-builder:1.0 xordpe-test/capstone2020-builder:1.0'
             }
             }
         }
@@ -98,7 +98,7 @@ pipeline {
                 script {
                 // Use Pipeline-cli node project to deploy the wiof-build image to Prod Stage
                 echo "Deploying to Prod ..."
-                sh oc tag xordpe-tools/capstone2020-builder:1.0 xordpe-prod/capstone2020-builder:1.0
+                sh 'oc tag xordpe-tools/capstone2020-builder:1.0 xordpe-prod/capstone2020-builder:1.0'
                 }
               }
            }
