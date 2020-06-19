@@ -33,10 +33,10 @@
             "required": true,
             "value": "jenkins-basic:v2-latest"
         },{
-            "name": "SOURCE_REPOSITORY_URL",
+            "name": "SOURCE_GIT_URL",
             "required": true
         },{
-            "name": "SOURCE_REPOSITORY_REF",
+            "name": "SOURCE_GIT_REF",
             "required": true
         }
     ],

@@ -99,10 +99,7 @@
             "apiVersion": "v1",
             "metadata": {
                 "name": "${NAME}${SUFFIX}",
-                "annotations": {
-                    "volume.beta.kubernetes.io/storage-class": "gluster-file",
-                    "volume.beta.kubernetes.io/storage-provisioner": "kubernetes.io/glusterfs"
-                }
+                "storageClassName": "netapp-file-standard"
             },
             "spec": {
                 "accessModes": [
