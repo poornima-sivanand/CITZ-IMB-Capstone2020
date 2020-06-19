@@ -77,8 +77,8 @@
                 "source": {
                     "type": "Git",
                     "git": {
-                        "uri": "${SOURCE_REPOSITORY_URL}",
-                        "ref": "${SOURCE_REPOSITORY_REF}"
+                        "uri": "${SOURCE_GIT_URL}",
+                        "ref": "${SOURCE_GIT_REF}"
                     },
                     "contextDir": ".jenkins/docker"
                 },
