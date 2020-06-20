@@ -1,0 +1,64 @@
+---
+apiVersion: template.openshift.io/v1
+kind: Template
+objects:
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations: null
+    creationTimestamp: null
+    labels:
+      shared: "true"
+    name: capstone2020-app-s2i-image
+  spec:
+    lookupPolicy:
+      local: true
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations: null
+    creationTimestamp: null
+    labels:
+      shared: "true"
+    name: capstone2020
+  spec:
+    lookupPolicy:
+      local: true
+- apiVersion: build.openshift.io/v1
+  kind: BuildConfig
+  metadata:
+    labels:
+      application: capstone2020
+    name: capstone2020
+  spec:
+    nodeSelector: null
+    output:
+      to:
+        kind: ImageStreamTag
+        name: 'capstone2020:${VERSION}'
+    source:
+      git:
+        ref: ${SOURCE_GIT_REF}
+        uri: ${SOURCE_GIT_URL}
+      type: Git
+    strategy:
+      sourceStrategy:
+        env:
+          - name: OUTPUT_DIR
+            value: build
+        from:
+          kind: ImageStreamTag
+          name: 'capstone2020-app-s2i-image:1.0'
+        incremental: true
+      type: Source
+    triggers:
+      - type: ConfigChange
+      - type: ImageChange
+parameters:
+- name: VERSION
+  decription: The output tag name created by the build config
+  required: true
+- name: SOURCE_GIT_URL
+  required: true
+- name: SOURCE_GIT_REF
+  required: true
