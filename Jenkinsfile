@@ -14,9 +14,10 @@ pipeline {
                    
                 }
                 script {    
+                    VERSION='1.1'
                     // Use Pipeline-cli node project to build the open shift images, wiof-app-build ( open jdk image to build code with maven ) and wiof-build ( jboss web server image to host the web application ) 
                     echo "Building Openshift Images..." 
-                      
+                    sh "oc process -f .openshiftio/build.yaml -p VERSION=${VERSION}-p SOURCE_GIT_URL=${GIT_URL} -p SOURCE_GIT_REF=${GIT_BRANCH} | oc apply -n xordpe-tools -f -"
                 }
             }
         }
@@ -27,8 +28,8 @@ pipeline {
                 script {
                 // Use Pipeline-cli node project to deploy the wiof-build image to Dev Stage 
                 echo "Deploying to DEV ..."
-                sh 'oc tag xordpe-tools/capstone2020-builder:1.0 xordpe-dev/capstone2020-builder:1.0'
-                sh 'oc process -f .openshiftio/deployment.yaml -p VERSION=1.0 -p NAMESPACE=xordpe-dev | oc apply -n xordpe-dev -f -'
+                sh 'oc tag xordpe-tools/capstone2020-builder:${VERSION} xordpe-dev/capstone2020-builder:${VERSION}'
+                sh 'oc process -f .openshiftio/deployment.yaml -p VERSION=${VERSION}-p NAMESPACE=xordpe-dev | oc apply -n xordpe-dev -f -'
              }
            }
         }
@@ -63,8 +64,8 @@ pipeline {
                 script {
                 // Use Pipeline-cli node project to deploy the wiof-build image to Test Stage 
                 echo "Deploying to Test ..."
-                sh 'oc tag xordpe-tools/capstone2020-builder:1.0 xordpe-test/capstone2020-builder:1.0'
-                sh 'oc process -f .openshiftio/deployment.yaml -p VERSION=1.0 -p NAMESPACE=xordpe-test | oc apply -n xordpe-test -f -'
+                sh 'oc tag xordpe-tools/capstone2020-builder:${VERSION} xordpe-test/capstone2020-builder:${VERSION}'
+                sh 'oc process -f .openshiftio/deployment.yaml -p VERSION=${VERSION} -p NAMESPACE=xordpe-test | oc apply -n xordpe-test -f -'
             }
             }
         }
@@ -100,8 +101,8 @@ pipeline {
                 script {
                 // Use Pipeline-cli node project to deploy the wiof-build image to Prod Stage
                 echo "Deploying to Prod ..."
-                sh 'oc tag xordpe-tools/capstone2020-builder:1.0 xordpe-prod/capstone2020-builder:1.0'
-                sh 'oc process -f .openshiftio/deployment.yaml -p VERSION=1.0 -p NAMESPACE=xordpe-prod | oc apply -n xordpe-prod -f -'
+                sh 'oc tag xordpe-tools/capstone2020-builder:${VERSION} xordpe-prod/capstone2020-builder:${VERSION}'
+                sh 'oc process -f .openshiftio/deployment.yaml -p VERSION=${VERSION} -p NAMESPACE=xordpe-prod | oc apply -n xordpe-prod -f -'
                 }
               }
            }
@@ -114,6 +115,7 @@ pipeline {
                 script {
                // Fetch all builds for the Pull request from JIRA and mark them succesful (possibility of multiple builds since passing Build keys through jenkins adds an unsucessful build as a Bug)
                   echo "Clean out"
+
                }
             }
         }             
