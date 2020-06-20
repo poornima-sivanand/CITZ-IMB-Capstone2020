@@ -5,8 +5,8 @@ pipeline {
     }
     
     stages {           
-        stage('Build') {
-            agent { label 'build' }
+        stage("Build") {
+            agent { label "build" }
             steps {
                 echo "Aborting all running jobs ..."
                 script {
@@ -14,7 +14,7 @@ pipeline {
                    
                 }
                 script {    
-                    VERSION='1.1'
+                    VERSION="1.1"
                     // Use Pipeline-cli node project to build the open shift images, wiof-app-build ( open jdk image to build code with maven ) and wiof-build ( jboss web server image to host the web application ) 
                     echo "Building Openshift Images..." 
                     sh "oc process -f .openshiftio/build.yaml -p VERSION=${VERSION}-p SOURCE_GIT_URL=${GIT_URL} -p SOURCE_GIT_REF=${GIT_BRANCH} | oc apply -n xordpe-tools -f -"
@@ -22,22 +22,22 @@ pipeline {
             }
         }
 
-        stage('Deploy App Changes to DEV') {
-            agent { label 'build' } // Run on jenkins slave 'build'
+        stage("Deploy App Changes to DEV") {
+            agent { label "build" } // Run on jenkins slave "build"
             steps {
                 script {
                 // Use Pipeline-cli node project to deploy the wiof-build image to Dev Stage 
                 echo "Deploying to DEV ..."
-                sh 'oc tag xordpe-tools/capstone2020-builder:${VERSION} xordpe-dev/capstone2020-builder:${VERSION}'
-                sh 'oc process -f .openshiftio/deployment.yaml -p VERSION=${VERSION}-p NAMESPACE=xordpe-dev | oc apply -n xordpe-dev -f -'
+                sh "oc tag xordpe-tools/capstone2020-builder:${VERSION} xordpe-dev/capstone2020-builder:${VERSION}"
+                sh "oc process -f .openshiftio/deployment.yaml -p VERSION=${VERSION}-p NAMESPACE=xordpe-dev | oc apply -n xordpe-dev -f -"
              }
            }
         }
 
-         stage('Approval For Test') {
-            agent { label 'deploy' }   
+         stage("Approval For Test") {
+            agent { label "deploy" }   
             when {
-                expression { return env.CHANGE_TARGET == 'master';}
+                expression { return env.CHANGE_TARGET == "master";}
                  beforeInput true;
             }  
             input {
@@ -53,29 +53,29 @@ pipeline {
          }
 
 
-        stage('Deploy App Changes to TEST') {             
-            agent { label 'deploy' } 
+        stage("Deploy App Changes to TEST") {             
+            agent { label "deploy" } 
             when {
                 // Run Stage only if Pull Request is to master branch
-                expression { return env.CHANGE_TARGET == 'master';}
+                expression { return env.CHANGE_TARGET == "master";}
                 beforeInput true;
             }                        
             steps {
                 script {
                 // Use Pipeline-cli node project to deploy the wiof-build image to Test Stage 
                 echo "Deploying to Test ..."
-                sh 'oc tag xordpe-tools/capstone2020-builder:${VERSION} xordpe-test/capstone2020-builder:${VERSION}'
-                sh 'oc process -f .openshiftio/deployment.yaml -p VERSION=${VERSION} -p NAMESPACE=xordpe-test | oc apply -n xordpe-test -f -'
+                sh "oc tag xordpe-tools/capstone2020-builder:${VERSION} xordpe-test/capstone2020-builder:${VERSION}"
+                sh "oc process -f .openshiftio/deployment.yaml -p VERSION=${VERSION} -p NAMESPACE=xordpe-test | oc apply -n xordpe-test -f -"
             }
             }
         }
 
 
 
-        stage('Approval For PROD') {
-            agent { label 'deploy' }   
+        stage("Approval For PROD") {
+            agent { label "deploy" }   
             when {
-                expression { return env.CHANGE_TARGET == 'master';}
+                expression { return env.CHANGE_TARGET == "master";}
                  beforeInput true;
             }  
             input {
@@ -90,26 +90,26 @@ pipeline {
              }
          }
 
-        stage('Deploy App Changes to PROD') {
-            agent { label 'deploy' }
+        stage("Deploy App Changes to PROD") {
+            agent { label "deploy" }
             when {
                 // Run Stage only if Pull Request is to master branch
-                expression { return env.CHANGE_TARGET == 'master';}
+                expression { return env.CHANGE_TARGET == "master";}
                 beforeInput true;
             }      
             steps {
                 script {
                 // Use Pipeline-cli node project to deploy the wiof-build image to Prod Stage
                 echo "Deploying to Prod ..."
-                sh 'oc tag xordpe-tools/capstone2020-builder:${VERSION} xordpe-prod/capstone2020-builder:${VERSION}'
-                sh 'oc process -f .openshiftio/deployment.yaml -p VERSION=${VERSION} -p NAMESPACE=xordpe-prod | oc apply -n xordpe-prod -f -'
+                sh "oc tag xordpe-tools/capstone2020-builder:${VERSION} xordpe-prod/capstone2020-builder:${VERSION}"
+                sh "oc process -f .openshiftio/deployment.yaml -p VERSION=${VERSION} -p NAMESPACE=xordpe-prod | oc apply -n xordpe-prod -f -"
                 }
               }
            }
         
 
-       stage('Clean Out') {
-            agent { label 'deploy' }   
+       stage("Clean Out") {
+            agent { label "deploy" }   
             steps {
                 // Use Pipeline-cli node project to clean openshift objects
                 script {
