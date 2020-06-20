@@ -19,6 +19,7 @@ pipeline {
                     // Use Pipeline-cli node project to build the open shift images, wiof-app-build ( open jdk image to build code with maven ) and wiof-build ( jboss web server image to host the web application ) 
                     echo "Building Openshift Images..." 
                     sh "oc process -f .openshiftio/build.yaml -p VERSION=${VERSION} -p SOURCE_GIT_URL=${FORK_URL} -p SOURCE_GIT_REF=${CHANGE_BRANCH} | oc apply --wait=true -n xordpe-tools -f -"
+                    sleep 120
                     sh "oc -n xordpe-tools logs -f bc/capstone2020"
                 }
             }
