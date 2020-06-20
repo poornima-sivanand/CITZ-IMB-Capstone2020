@@ -11,6 +11,8 @@ pipeline {
                 echo "Aborting all running jobs ..."
                 script {
                     abortAllPreviousBuildInProgress(currentBuild)
+                    echo "${BRANCH_NAME}"
+                    echo "${GIT_BRANCH}"
                    
                 }
                 script {    
