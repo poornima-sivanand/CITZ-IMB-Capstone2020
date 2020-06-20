@@ -11,6 +11,7 @@ pipeline {
                 echo "Aborting all running jobs ..."
                 script {
                     abortAllPreviousBuildInProgress(currentBuild)
+                    echo "${GIT_URL1}:  ${GIT_URL} : ${GIT_URL2}: ${CHANGE_URL}"
 
                 }
                 script {    
