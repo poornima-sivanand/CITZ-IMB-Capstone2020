@@ -7,7 +7,7 @@ module.exports = async (settings) => {
   const oc = new OpenShiftClientX(Object.assign({ namespace: phases.build.namespace }, settings.options));
   const phase = 'build';
   let objects = [];
-  const templatesLocalBaseUrl = oc.toFileUrl(path.resolve(__dirname, '../'));
+  const templatesLocalBaseUrl = oc.toFileUrl(path.resolve(__dirname, '../../'));
 
   objects.push(... oc.processDeploymentTemplate(`${templatesLocalBaseUrl}/build.yaml`, {
     'param':{
