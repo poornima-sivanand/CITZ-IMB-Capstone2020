@@ -2,7 +2,7 @@
 kind: Template
 apiVersion: v1
 metadata:
- name: capstone2020
+ name: ${NAME}
  annotations:
  description: Deployment template for a nodejs server and postgres db.
  tags: node
@@ -11,17 +11,17 @@ objects:
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
   metadata:
-    name: capstone2020
+    name: ${NAME}
     annotations:
       openshift.io/generated-by: OpenShiftWebConsole
     generation: 2
     labels:
-      app: capstone2020
+      app: ${NAME}
   spec:
     replicas: 2
     selector:
-      app: capstone2020
-      deploymentconfig: capstone2020
+      app: ${NAME}
+      deploymentconfig: ${NAME}
     strategy:
       activeDeadlineSeconds: 21600
       resources: {}
@@ -37,14 +37,14 @@ objects:
         annotations:
           openshift.io/generated-by: OpenShiftWebConsole
         labels:
-          app: capstone2020
-          deploymentconfig: capstone2020
+          app: ${NAME}
+          deploymentconfig: ${NAME}
       spec:
         containers:
         - image: ''
           dnsPolicy: ClusterFirst
           imagePullPolicy: Always
-          name: capstone2020
+          name: ${NAME}
           ports:
             - containerPort: 8080
               protocol: TCP
@@ -61,49 +61,51 @@ objects:
       - imageChangeParams:
           automatic: true
           containerNames:
-            - capstone2020
+            - ${NAME}
           from:
             kind: ImageStreamTag
-            name: 'capstone2020-builder:${VERSION}'
+            name: '${NAME}:${VERSION}'
         type: ImageChange
 - kind: Service
   apiVersion: v1
   metadata:
-    name: capstone2020
+    name: ${NAME}
     annotations:
       description: Exposes and load balances the application pods
     labels:
-      app: capstone2020
+      app: ${NAME}
   spec:
     ports:
     - name: 8080-tcp
       port: 8080
       targetPort: 8080
     selector:
-      deploymentconfig: capstone2020
+      deploymentconfig: ${NAME}
 - apiVersion: route.openshift.io/v1
   kind: Route
   metadata:
     annotations:
       openshift.io/host.generated: 'true'
     labels:
-      app: capstone2020
-    name: capstone2020
+      app: ${NAME}
+    name: ${NAME}
   spec:
-    host: capstone2020-${NAMESPACE}.pathfinder.gov.bc.ca
+    host: ${HOST}
     port:
       targetPort: 8080-tcp
     tls:
       termination: edge
     to:
       kind: Service
-      name: capstone2020
+      name: ${NAME}
       weight: 100
     wildcardPolicy: None
 parameters:
+- name: NAME
+  required: true
 - name: VERSION
   required: true
-- name: NAMESPACE
+- name: HOST
   required: true
 
 

@@ -18,9 +18,7 @@ pipeline {
                     VERSION="1.1"
                     // Use Pipeline-cli node project to build the open shift images, wiof-app-build ( open jdk image to build code with maven ) and wiof-build ( jboss web server image to host the web application ) 
                     echo "Building Openshift Images..." 
-                    sh "oc process -f .openshiftio/build.yaml -p VERSION=${VERSION} -p SOURCE_GIT_URL=${FORK_URL} -p SOURCE_GIT_REF=${CHANGE_BRANCH} | oc apply --wait=true -n xordpe-tools -f -"
-                    sleep 120
-                    sh "oc -n xordpe-tools logs -f bc/capstone2020"
+                    sh "cd .openshiftio/.pipeline && npmw ci && DEBUG=* npmw run build -- --pr=${CHANGE_ID} --git.branch.name=${CHANGE_BRANCH} --git.branch.merge=${CHANGE_BRANCH} --git.branch.remote=${CHANGE_BRANCH}--git.url=${FORK_URL}"
                 }
             }
         }
@@ -31,8 +29,7 @@ pipeline {
                 script {
                 // Use Pipeline-cli node project to deploy the wiof-build image to Dev Stage 
                 echo "Deploying to DEV ..."
-                sh "oc tag xordpe-tools/capstone2020-builder:${VERSION} xordpe-dev/capstone2020-builder:${VERSION}"
-                sh "oc process -f .openshiftio/deployment.yaml -p VERSION=${VERSION}-p NAMESPACE=xordpe-dev | oc apply -n xordpe-dev -f -"
+                sh "cd .openshiftio/.pipeline && npmw ci && DEBUG=* npmw run deploy -- --pr=${CHANGE_ID} --env=dev --git.branch.name=${CHANGE_BRANCH} --git.branch.merge=${CHANGE_BRANCH} --git.branch.remote=${CHANGE_BRANCH}--git.url=${FORK_URL}"
              }
            }
         }
@@ -67,8 +64,7 @@ pipeline {
                 script {
                 // Use Pipeline-cli node project to deploy the wiof-build image to Test Stage 
                 echo "Deploying to Test ..."
-                sh "oc tag xordpe-tools/capstone2020-builder:${VERSION} xordpe-test/capstone2020-builder:${VERSION}"
-                sh "oc process -f .openshiftio/deployment.yaml -p VERSION=${VERSION} -p NAMESPACE=xordpe-test | oc apply -n xordpe-test -f -"
+                sh "cd .openshiftio/.pipeline && npmw ci && DEBUG=* npmw run deploy -- --pr=${CHANGE_ID} --env=test --git.branch.name=${CHANGE_BRANCH} --git.branch.merge=${CHANGE_BRANCH} --git.branch.remote=${CHANGE_BRANCH}--git.url=${FORK_URL}"
             }
             }
         }
@@ -104,8 +100,7 @@ pipeline {
                 script {
                 // Use Pipeline-cli node project to deploy the wiof-build image to Prod Stage
                 echo "Deploying to Prod ..."
-                sh "oc tag xordpe-tools/capstone2020-builder:${VERSION} xordpe-prod/capstone2020-builder:${VERSION}"
-                sh "oc process -f .openshiftio/deployment.yaml -p VERSION=${VERSION} -p NAMESPACE=xordpe-prod | oc apply -n xordpe-prod -f -"
+                sh "cd .openshiftio/.pipeline && npmw ci && DEBUG=* npmw run deploy -- --pr=${CHANGE_ID} --env=prod --git.branch.name=${CHANGE_BRANCH} --git.branch.merge=${CHANGE_BRANCH} --git.branch.remote=${CHANGE_BRANCH}--git.url=${FORK_URL}"
                 }
               }
            }
@@ -118,6 +113,8 @@ pipeline {
                 script {
                // Fetch all builds for the Pull request from JIRA and mark them succesful (possibility of multiple builds since passing Build keys through jenkins adds an unsucessful build as a Bug)
                   echo "Clean out"
+                  sh "cd .openshiftio/.pipeline && npmw ci && DEBUG=* npmw run clean -- --pr=${CHANGE_ID} --env=dev --git.branch.name=${CHANGE_BRANCH} --git.branch.merge=${CHANGE_BRANCH} --git.branch.remote=${CHANGE_BRANCH}--git.url=${FORK_URL}"
+                  sh "cd .openshiftio/.pipeline && npmw ci && DEBUG=* npmw run clean -- --pr=${CHANGE_ID} --env=build --git.branch.name=${CHANGE_BRANCH} --git.branch.merge=${CHANGE_BRANCH} --git.branch.remote=${CHANGE_BRANCH}--git.url=${FORK_URL}"
 
                }
             }
