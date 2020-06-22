@@ -20,7 +20,7 @@ objects:
     creationTimestamp: null
     labels:
       shared: "true"
-    name: capstone2020-builder
+    name: ${NAME}
   spec:
     lookupPolicy:
       local: true
@@ -28,14 +28,14 @@ objects:
   kind: BuildConfig
   metadata:
     labels:
-      application: capstone2020
-    name: capstone2020
+      application: ${NAME}
+    name: ${NAME}
   spec:
     nodeSelector: null
     output:
       to:
         kind: ImageStreamTag
-        name: 'capstone2020-builder:${VERSION}'
+        name: '${NAME}:${VERSION}'
     source:
       git:
         ref: ${SOURCE_GIT_REF}
@@ -55,8 +55,9 @@ objects:
       - type: ConfigChange
       - type: ImageChange
 parameters:
+- name: NAME
+  required: true
 - name: VERSION
-  decription: The output tag name created by the build config
   required: true
 - name: SOURCE_GIT_URL
   required: true
