@@ -16,7 +16,7 @@ module.exports = async (settings)=>{
     'param':{
       'NAME': phases[phase].name,
       'VERSION': phases[phase].tag,
-      'ROUTE_HOST': phases[phase].host
+      'HOST': phases[phase].host
     }
   }));
 
