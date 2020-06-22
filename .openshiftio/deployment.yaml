@@ -8,6 +8,17 @@ metadata:
  tags: node
  iconClass: icon-node
 objects:
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    annotations: null
+    creationTimestamp: null
+    labels:
+      shared: "true"
+    name: ${NAME}
+  spec:
+    lookupPolicy:
+      local: false
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
   metadata:
