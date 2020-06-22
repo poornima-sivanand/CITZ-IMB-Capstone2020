@@ -14,7 +14,7 @@ const phases0 = {
   changeId:  {build: changeId                      , dev: changeId                                                        , test: changeId                                              , prod: changeId},
   tag:       {build: `build-${version}-${changeId}`, dev: `dev-${version}-${changeId}`                                    , test: `test-${version}`                                     , prod: `prod-${version}`},
   instance:  {build: `${name}-build-${changeId}`   , dev: `${name}-dev-${changeId}`                                       , test: `${name}-test`                                        , prod: `${name}-prod-${changeId}`},
-  host:      {build: ''                            , dev: `${name}-dev-${namespace.dev}.pathfinder.gov.bc.ca` , test: `${name}-test-${namespace.test}.pathfinder.gov.bc.ca` , prod: `${name}-prod-${namespace.prod}.pathfinder.gov.bc.ca`},
+  host:      {build: ''                            , dev: `${name}-${namespace.dev}.pathfinder.gov.bc.ca`                 , test: `${name}-${namespace.test}.pathfinder.gov.bc.ca`      , prod: `${name}-${namespace.prod}.pathfinder.gov.bc.ca`},
   transient: {build: true                          , dev: true                                                            , test: false                                                 , prod: false},
 };
 
